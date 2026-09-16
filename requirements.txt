@@ -1,0 +1,4 @@
+docling
+streamlit
+torch
+torchvision
