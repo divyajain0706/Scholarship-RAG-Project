@@ -1,0 +1,12 @@
+{
+    "income_cap_detected": "Not Specified",
+    "eligible_categories": [
+        "SC",
+        "General"
+    ],
+    "has_tables": true,
+    "document_id": "pdf2",
+    "source_file": "pdf2.pdf",
+    "engine_used": "Docling AI",
+    "status": "SUCCESS"
+}

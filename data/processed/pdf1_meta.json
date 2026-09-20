@@ -1,0 +1,11 @@
+{
+    "income_cap_detected": "2",
+    "eligible_categories": [
+        "SC"
+    ],
+    "has_tables": true,
+    "document_id": "pdf1",
+    "source_file": "pdf1.pdf",
+    "engine_used": "Docling AI",
+    "status": "SUCCESS"
+}

@@ -1,39 +1,68 @@
 import os
+import json
+from pathlib import Path
+import streamlit as st
 
-# Disable symlinks on Windows to prevent permission errors
 os.environ["HF_HUB_DISABLE_SYMLINKS"] = "1"
 
-import tempfile
-import streamlit as st
-from docling.document_converter import DocumentConverter
+st.set_page_config(page_title="Scholarship RAG - Production Admin Dashboard", layout="wide")
 
-import os
+st.title("⚙️ Scholarship RAG: Phase 1 Admin & Pipeline Dashboard")
 
-st.set_page_config(page_title="Scholarship PDF Parser", layout="wide")
-st.title("📄 Scholarship PDF to Markdown Converter")
+tab1, tab2, tab3 = st.tabs(["📤 Batch PDF Ingestion", "🔍 Document & Metadata Inspector", "🧩 Chunk Quality Auditor"])
 
-uploaded_file = st.file_uploader("Upload a PDF document", type=["pdf"])
+PROCESSED_DIR = Path("data/processed")
+RAW_DIR = Path("data/raw_pdfs")
+RAW_DIR.mkdir(parents=True, exist_ok=True)
 
-if uploaded_file is not None:
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
-        tmp_file.write(uploaded_file.getvalue())
-        tmp_path = tmp_file.name
+with tab1:
+    st.header("Batch Ingestion Pipeline")
+    uploaded_files = st.file_uploader("Upload Government Circular PDFs", type=["pdf"], accept_multiple_files=True)
+    
+    if uploaded_files:
+        for uploaded_file in uploaded_files:
+            save_path = RAW_DIR / uploaded_file.name
+            with open(save_path, "wb") as f:
+                f.write(uploaded_file.getbuffer())
+        st.success(f"Saved {len(uploaded_files)} PDF(s) to `data/raw_pdfs/`")
 
-    with st.spinner("Processing PDF using Docling..."):
-        converter = DocumentConverter()
-        result = converter.convert(tmp_path)
-        markdown_text = result.document.export_to_markdown()
+    if st.button("🚀 Run Batch Ingestion Pipeline"):
+        with st.spinner("Processing documents..."):
+            from src.ingestion.batch_parser import SmartHybridPDFPipeline
+            pipeline = SmartHybridPDFPipeline()
+            pipeline.run_pipeline()
+        st.success("Batch Ingestion Complete!")
 
-    os.remove(tmp_path)
+with tab2:
+    st.header("Metadata & Document Inspector")
+    md_files = list(PROCESSED_DIR.glob("*.md"))
+    if md_files:
+        selected_doc = st.selectbox("Select Processed Document", [f.stem for f in md_files])
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            st.subheader("Extracted Markdown Text")
+            with open(PROCESSED_DIR / f"{selected_doc}.md", "r", encoding="utf-8") as f:
+                st.text_area("Markdown Output", f.read(), height=400)
+                
+        with col2:
+            st.subheader("Extracted Metadata Sidecar (.json)")
+            meta_path = PROCESSED_DIR / f"{selected_doc}_meta.json"
+            if meta_path.exists():
+                with open(meta_path, "r", encoding="utf-8") as f:
+                    st.json(json.load(f))
+            else:
+                st.warning("No metadata JSON found.")
+    else:
+        st.info("No processed documents found. Upload PDFs and run ingestion first.")
 
-    st.success("PDF successfully converted!")
-    st.subheader("Converted Markdown Output:")
-    st.markdown(markdown_text)
-
-    st.download_button(
-        label="📥 Download Clean Markdown (.md)",
-        data=markdown_text,
-        file_name="parsed_scholarship.md",
-        mime="text/markdown"
-    )
-
+with tab3:
+    st.header("Chunk Quality Auditor")
+    chunks_file = PROCESSED_DIR / "all_chunks.json"
+    if chunks_file.exists():
+        with open(chunks_file, "r", encoding="utf-8") as f:
+            chunks = json.load(f)
+        st.metric("Total Generated Chunks", len(chunks))
+        st.dataframe(chunks)
+    else:
+        st.info("Run `python src/ingestion/chunker.py` to generate `all_chunks.json`.")
