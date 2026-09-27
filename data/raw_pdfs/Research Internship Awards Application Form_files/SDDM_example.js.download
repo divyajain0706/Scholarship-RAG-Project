@@ -1,0 +1,67 @@
+/* --------------------------------------
+   Sirius Drop Down Menu Configuration
+   --------------------------------------*/
+
+
+/* --------------------------------------
+   The Top Level Images.
+   --------------------------------------*/
+
+SDDM_image_src = "Images/Menu/People.jpg"
+SDDM_image_highlight_src = "Images/Menu/People-hl.jpg"
+
+SDDM_image1_src = "Images/Menu/Publication.jpg"
+SDDM_image1_highlight_src = "Images/Menu/Publication-hl.jpg"
+
+
+/* --------------------------------------
+   General Submenu Settings.
+   --------------------------------------*/
+
+SDDM_submenu_x = 0
+SDDM_submenu_y = 25
+SDDM_submenu_width = 120
+
+SDDM_submenu_border = 1
+SDDM_submenu_border_color = "333333"
+SDDM_submenu_item_indent = 3
+SDDM_submenu_item_height = 16
+SDDM_submenu_item_spacing = 2
+SDDM_submenu_item_spacing_color = "ffffff"
+SDDM_submenu_background_color = "#631516"
+SDDM_submenu_highlight_color = "#ffffff"
+
+SDDM_submenu_font_face = "Verdana, Arial, Helvetica, sans-serif"
+SDDM_submenu_font_size = "1.9 px" 
+SDDM_submenu_font_color = "FFFFFF"
+SDDM_submenu_font_highlight_color = "#000000"
+SDDM_hide_delay = 200
+
+SDDM_submenu_url_target = "_top"
+
+
+/* --------------------------------------
+   Submenu Items.
+   --------------------------------------*/
+//SDDM_submenu_url_target = "_self"
+SDDM_submenu_1_text = "Dean"
+SDDM_submenu_1_link = "dean.html"
+SDDM_submenu_1_url_target = "_self"
+
+SDDM_submenu_2_text = "Associate Dean"
+SDDM_submenu_2_link = "adean.html"
+SDDM_submenu_2_url_target = "_self"
+
+SDDM_submenu_3_text = "Officers"
+SDDM_submenu_3_link = "officers.html"
+SDDM_submenu_3_url_target = "_self"
+
+//SDDM_submenu_url_target = "_blank"
+SDDM_submenu1_1_text = "R&D Spectrum"
+SDDM_submenu1_1_url_target = "_blank"
+SDDM_submenu1_1_link = "http://www.ircc.iitb.ac.in/R&DSpectrum/"
+
+SDDM_submenu1_2_text = "Update"
+SDDM_submenu1_2_url_target = "_blank"
+SDDM_submenu1_2_link = "http://www.ircc.iitb.ac.in/update/"
+
